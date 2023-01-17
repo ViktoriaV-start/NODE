@@ -1,0 +1,83 @@
+// По ссылке вы найдёте файл с логами запросов к серверу весом более 2 Гб. 
+// Напишите программу, которая находит в этом файле все записи с ip-адресами 89.123.1.41 и 34.48.240.111, 
+// а также сохраняет их в отдельные файлы с названием %ip-адрес%_requests.log.
+
+
+
+//------------------------------- ПЕРВЫЙ ВАРИАНТ
+
+// const rs = createReadStream('./dup.log');
+// const report = new PassThrough();
+
+// const writeLog = (data, user) => {
+//   const writeStream = fs.createWriteStream(user, {flags: 'a'});
+//   writeStream.write(data.toString());
+//   writeStream.end(() => console.log('File writing is finished!'));
+// };
+
+// report.on('data', (chunk) => {
+//   let data = chunk.toString().match(/^(89.123.1.41) (.)+/gm).toString().replace(/89.123.1.41/gm, '\n89.123.1.41');
+//   writeLog(data, './user_89.log');
+//   data = chunk.toString().match(/^(34.48.240.111) (.)+/gm).toString().replace(/34.48.240.111/gm, '\n34.48.240.111');
+//   writeLog(data, './user_34.log');
+// });
+
+// rs.pipe(report);
+
+//-------------------------------- ПЕРВЫЙ ВАРИАНТ
+// import { PassThrough } from 'stream';
+// import { createReadStream, createWriteStream } from 'fs';
+// import fs from 'fs';
+
+// const getLog = (readFile, ip, writeFile) => {
+//   const rs = createReadStream(readFile);
+//   const report = new PassThrough();
+
+//   const writeLog = (logs) => {
+//     const writeStream = fs.createWriteStream(writeFile, {flags: 'a'});
+//     writeStream.write(logs.toString());
+//     writeStream.end(() => console.log('File writing is finished!'));
+//   };
+
+//   report.on('data', (chunk) => {
+//     const regexpSearch = new RegExp(`^(${ip}) (.)+`, 'gm');
+//     const regexpIp = new RegExp(`${ip}`, 'gm');
+//     const logs = chunk.toString().match(regexpSearch).toString().replace(regexpIp, `\n${ip}`);
+//     writeLog(logs);
+//   });
+
+//   rs.pipe(report);
+// };
+
+// getLog('./dup.log', '89.123.1.41', './user_89.log');
+// getLog('./dup.log', '34.48.240.111', './user_34.log');
+
+
+//-------------------------------- ВТОРОЙ ВАРИАНТ ЧЕРЕЗ TRANSFORM
+
+
+import { Transform } from 'stream'
+import { createReadStream, createWriteStream } from 'fs'
+ 
+const getLog = (readFile, ip, writeFile) => {
+  const rs = createReadStream(readFile);
+  const ws = createWriteStream(writeFile);
+
+  const transformStream = new Transform({
+    transform(chunk, encoding, callback) {
+
+      const regexpSearch = new RegExp(`^(${ip}) (.)+`, 'gm');
+      const regexpIp = new RegExp(`${ip}`, 'gm');
+      const logs = chunk.toString().match(regexpSearch).toString().replace(regexpIp, `\n${ip}`);
+      
+      this.push(logs);
+
+      callback();
+    }
+})
+
+rs.pipe(transformStream).pipe(ws);
+}
+
+getLog('./dup.log', '89.123.1.41', './user_89.log');
+getLog('./dup.log', '34.48.240.111', './user_34.log');
