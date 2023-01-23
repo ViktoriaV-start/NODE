@@ -7,11 +7,16 @@
     "start": "node index.js"
   },
   "type": "module",
+  "bin": {
+    "reader": "./examples/cli_4.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "colors": "^1.4.0"
+    "colors": "^1.4.0",
+    "inquirer": "^9.1.4",
+    "yargs": "^17.6.2"
   },
   "devDependencies": {
     "@types/node": "^18.11.17",

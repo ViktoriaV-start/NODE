@@ -352,9 +352,9 @@ emitterObject.once('stop', Handler.stop);
   //   checkTimer().then(
   //     (timerInfo) => emitterObject.emit(timerInfo.type, timerInfo.payload)
   //     )
-  //   // if (timerInfo.type !== 'inWork') {
-  //   //   return;
-  //   // }
+  //   if (timerInfo.type !== 'inWork') {
+  //     return;
+  //   }
 
   //   .then(() => run()); НУЖНО ВОТ ТАК, НО ТОГДА БЕЗ ПРЕДЫДУЩЕГО IF
     
@@ -429,3 +429,4 @@ for (const arg of  process.argv.slice(2)) {
   if (isNaN(dateInFuture)) continue
   start(dateInFuture)
 }
+

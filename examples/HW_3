@@ -64,6 +64,10 @@ const getLog = (readFile, ip, writeFile) => {
   const ws = createWriteStream(writeFile);
 
   const transformStream = new Transform({
+
+//Здесь мы создаём экземпляр класса Transfrom и передаём в конструктор метод transform.
+//Этот метод и будет выполнять основную работу — преобразовывать данные и отправлять их дальше.
+
     transform(chunk, encoding, callback) {
 
       const regexpSearch = new RegExp(`^(${ip}) (.)+`, 'gm');
@@ -81,3 +85,35 @@ rs.pipe(transformStream).pipe(ws);
 
 getLog('./dup.log', '89.123.1.41', './user_89.log');
 getLog('./dup.log', '34.48.240.111', './user_34.log');
+
+
+
+
+//-------------------------------- ВАРИАНТ С УРОКА
+
+import fs from 'fs';
+import readline from 'readline'
+
+const readStream = fs.createReadStream('./access.log', 'utf-8');
+const ip1 = '89.123.1.41';
+const ip2 = '34.48.240.111';
+const writeStream1 = fs.createWriteStream(`${ip1}`);
+const writeStream2 = fs.createWriteStream(`${ip2}`);
+
+let numStr = 0;
+
+const rl = readline.createInterface({
+    input: readStream
+});
+
+rl.on('line', (line) => {
+    if (line.includes(ip1)) {
+        writeStream1.write(line + '\n');
+    }
+
+    if (line.includes(ip2)) {
+        writeStream2.write(line + '\n')
+    }
+
+    console.log(++numStr)
+});
