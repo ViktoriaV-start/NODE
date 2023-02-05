@@ -430,3 +430,29 @@ for (const arg of  process.argv.slice(2)) {
   start(dateInFuture)
 }
 
+//----------------------------
+
+// let y = {
+//   name: (String.fromCharCode('e'.charCodeAt(0)+1) + 'a') + "()",
+// }
+const fancyRobot = () => console.log(111)
+
+
+// console.log(String.fromCharCode(102))
+//let str = "FancyRobot"; str = str[0].toLowerCase() + str.slice(1); eval(str+"(String(398+10))");
+
+const elegantRobot = (arg) => console.log(arg)
+
+
+// console.log(String.fromCharCode(102))
+
+//let str = "elegantR" + "\x6F" + "b" + "\x6F" + "t";
+
+
+//str = 'elegantR' + x.toLowerCase() + 'b' + x.toLowerCase() + 't'; eval(str+"('408')");
+
+
+
+let str = "elegantR" + "\x6F" + "b" + "\x6F" + "t"; eval(str+"('1')");
+console.log(str)
+//-----------------------------------
